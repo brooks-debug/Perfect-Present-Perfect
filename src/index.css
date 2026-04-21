@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-brand-primary: #0f172a; /* slate-900 */
+  --color-brand-secondary: #64748b; /* slate-500 */
+  --color-accent: #2563eb; /* blue-600 */
+  --color-accent-soft: #eff6ff; /* blue-50 */
+  --color-warm-bg: #f8fafc; /* slate-50 */
+}
+
+body {
+  @apply bg-slate-100 text-slate-900 font-sans antialiased h-screen overflow-hidden;
+}
+
+.lesson-card {
+  @apply bg-white rounded-2xl border border-slate-200 shadow-sm transition-all;
+}
+
+.interactive-card {
+  @apply bg-slate-900 rounded-2xl p-8 text-white shadow-xl;
+}
+
+.sidebar-item {
+  @apply flex items-center gap-3 text-sm transition-colors cursor-pointer;
+}
+
+.sidebar-item.active {
+  @apply text-blue-600 font-semibold;
+}
+
+.sidebar-item.inactive {
+  @apply text-slate-400;
+}
