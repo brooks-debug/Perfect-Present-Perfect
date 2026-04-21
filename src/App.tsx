@@ -32,6 +32,7 @@ export default function App() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [userAnswers, setUserAnswers] = useState<Record<string, { selected: string, isCorrect: boolean }>>({});
   
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
   const synth = window.speechSynthesis;
@@ -119,9 +120,15 @@ export default function App() {
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
     setShowExplanation(true);
-    if (option === currentStep.correctAnswer) {
-      // Maybe play a success chime?
-    }
+    
+    // Track answer
+    setUserAnswers(prev => ({
+      ...prev,
+      [currentStep.id]: {
+        selected: option,
+        isCorrect: option === currentStep.correctAnswer
+      }
+    }));
   };
 
   const restartLesson = () => {
@@ -129,7 +136,32 @@ export default function App() {
     setIsPlaying(false);
     setSelectedOption(null);
     setShowExplanation(false);
+    setUserAnswers({});
     stopSpeech();
+  };
+
+  const restartQuiz = () => {
+    const q1Index = lessonSteps.findIndex(s => s.id === 'q1');
+    if (q1Index !== -1) {
+      setCurrentIndex(q1Index);
+    } else {
+      setCurrentIndex(0);
+    }
+    setIsPlaying(false);
+    setSelectedOption(null);
+    setShowExplanation(false);
+    setUserAnswers({});
+    stopSpeech();
+  };
+
+  const getQuizResults = () => {
+    const quizSteps = lessonSteps.filter(s => s.type === 'quiz');
+    const total = quizSteps.length;
+    const answeredCount = Object.keys(userAnswers).length;
+    const correctCount = Object.values(userAnswers).filter(a => (a as { isCorrect: boolean }).isCorrect).length;
+    const missed = quizSteps.filter(s => !userAnswers[s.id]).map(s => s.text.split('.')[0]); // Extract number
+
+    return { total, answeredCount, correctCount, missed };
   };
 
   return (
@@ -140,9 +172,10 @@ export default function App() {
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
             <GraduationCap size={20} strokeWidth={2.5} />
           </div>
-          <span className="font-bold tracking-tight text-slate-800 italic uppercase tracking-widest">
-            Brooks <span className="text-blue-600 underline underline-offset-4 not-italic">Language</span>
-          </span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="font-logo font-black text-red-600 uppercase tracking-tighter text-[1.15rem] leading-none translate-y-[3px]">Brooks</span>
+            <span className="font-bold text-blue-600 uppercase tracking-widest text-sm underline underline-offset-[5px] decoration-2 leading-none">Language</span>
+          </div>
         </div>
         <div className="flex items-center gap-6">
           <div className="w-10 h-10 bg-slate-200 rounded-full border-2 border-white shadow-sm overflow-hidden flex items-center justify-center text-slate-500 font-bold text-xs uppercase">
@@ -158,14 +191,14 @@ export default function App() {
             <ul className="space-y-4">
               {[
                 { name: 'Introduction', index: 0 },
-                { name: 'Grammar Contrast', index: 10 },
-                { name: 'Practical Exercise', index: 25 },
-                { name: 'Summary Review', index: 32 }
+                { name: 'Grammar Contrast', index: 9 },
+                { name: 'Practical Exercise', index: 24 },
+                { name: 'Summary Review', index: 36 }
               ].map((item, idx) => {
-                const isActive = (currentIndex < 10 && item.name === 'Introduction') || 
-                               (currentIndex >= 10 && currentIndex < 25 && item.name === 'Grammar Contrast') ||
-                               (currentIndex >= 25 && currentIndex < 32 && item.name === 'Practical Exercise') ||
-                               (currentIndex >= 32 && item.name === 'Summary Review');
+                const isActive = (currentIndex < 9 && item.name === 'Introduction') || 
+                               (currentIndex >= 9 && currentIndex < 24 && item.name === 'Grammar Contrast') ||
+                               (currentIndex >= 24 && currentIndex < 36 && item.name === 'Practical Exercise') ||
+                               (currentIndex >= 36 && item.name === 'Summary Review');
                 return (
                   <li key={idx}>
                     <button 
@@ -185,10 +218,10 @@ export default function App() {
             </ul>
           </div>
 
-          <div className="mt-auto bg-blue-50 p-4 rounded-xl border border-blue-100">
+          <div className="mt-auto bg-blue-50 p-4 rounded-xl border border-blue-100 min-h-[100px] flex flex-col">
             <h4 className="text-xs font-bold text-blue-800 uppercase mb-2">Educator Note</h4>
             <p className="text-[13px] text-blue-700 leading-relaxed italic">
-              "You speak very clearly, and you are continuing to improve."
+              "{currentStep.educatorNote || "Consistency is the key to mastering English details. Keep practicing and you will get there!"}"
             </p>
           </div>
         </aside>
@@ -196,21 +229,95 @@ export default function App() {
         {/* Content Area */}
         <main className="flex-grow p-10 overflow-auto bg-white">
           <div className="max-w-4xl mx-auto">
-            <div className="mb-10 flex items-center justify-between">
-              <div>
-                <span className="text-blue-600 font-bold text-xs uppercase tracking-[0.2em]">Lesson Focus</span>
-                <h1 className="text-4xl font-bold text-slate-900 mt-1">Present Perfect Distinctions</h1>
-              </div>
-              <button 
-                onClick={restartLesson}
-                className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400"
-                title="Restart"
-              >
-                <RotateCcw size={20} />
-              </button>
-            </div>
+            {currentStep.id === 'results-screen' ? (
+              <div className="space-y-8">
+                <div className="mb-10 flex items-center justify-between">
+                  <div>
+                    <span className="text-blue-600 font-bold text-xs uppercase tracking-[0.2em]">Lesson Completed</span>
+                    <h1 className="text-4xl font-bold text-slate-900 mt-1 uppercase">Quiz Results</h1>
+                  </div>
+                  <div className="flex items-center gap-2 text-slate-400">
+                    <CheckCircle2 size={18} />
+                    <span className="text-xs font-bold uppercase tracking-widest leading-none">Summary</span>
+                  </div>
+                </div>
 
-            <AnimatePresence mode="wait">
+                {(() => {
+                  const { total, answeredCount, correctCount, missed } = getQuizResults();
+                  const allFinished = answeredCount === total;
+                  
+                  return (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="bg-slate-900 p-8 rounded-3xl text-white shadow-xl flex flex-col justify-between">
+                        <div>
+                          <p className="text-blue-400 font-bold uppercase tracking-widest text-xs mb-4">Your Score</p>
+                          <div className="text-7xl font-logo font-black mb-2">
+                            {correctCount}<span className="text-white/30 truncate">/{total}</span>
+                          </div>
+                          <p className="text-white/60 text-sm">
+                            You answered {answeredCount} out of {total} questions.
+                          </p>
+                        </div>
+                        <div className="mt-8 pt-8 border-t border-white/10">
+                          <p className="text-blue-400 font-bold uppercase tracking-widest text-xs mb-2">Feedback</p>
+                          <p className="text-lg font-medium leading-relaxed">
+                            {answeredCount === 0 ? "Don't forget to try the questions! Practice is the best way to master these details." :
+                             correctCount === total ? "Perfect! You have a strong command of Upper-intermediate tenses." :
+                             correctCount >= total * 0.7 ? "Great job! You've mastered the main details of these tenses." :
+                             correctCount >= total * 0.4 ? "Good effort, reviewing the process vs result slides may help you understand better." :
+                             "Don't worry, these tenses are tricky. Practice makes perfect!"}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        {!allFinished && (
+                          <div className="bg-red-50 border border-red-100 p-6 rounded-2xl">
+                            <h5 className="text-red-900 font-bold text-sm mb-2 flex items-center gap-2">
+                              <Info size={16} /> Attention
+                            </h5>
+                            <p className="text-red-700 text-sm leading-relaxed">
+                              You missed or skipped {total - answeredCount} question{total - answeredCount > 1 ? 's' : ''}.
+                              {missed.length > 0 && ` Specifically questions: ${missed.join(', ')}.`}
+                            </p>
+                          </div>
+                        )}
+                        <div className="bg-blue-50 border border-blue-100 p-6 rounded-2xl">
+                          <h5 className="text-blue-900 font-bold text-sm mb-2 flex items-center gap-2">
+                            <GraduationCap size={16} /> Progress
+                          </h5>
+                          <p className="text-blue-700 text-sm leading-relaxed">
+                            Completing this lesson moves you closer to Advanced level. Take your time to review any tricky questions.
+                          </p>
+                        </div>
+                        <button 
+                          onClick={restartQuiz}
+                          className="w-full bg-white border border-slate-200 p-4 rounded-xl font-bold text-slate-700 flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors"
+                        >
+                          <RotateCcw size={18} /> Restart Practice
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            ) : (
+              <>
+                <div className="mb-10 flex items-center justify-between">
+                  <div>
+                    <span className="text-blue-600 font-bold text-xs uppercase tracking-[0.2em]">Lesson Focus</span>
+                    <h1 className="text-4xl font-bold text-slate-900 mt-1">Present Perfect Distinctions</h1>
+                  </div>
+                  <button 
+                    onClick={restartLesson}
+                    className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400"
+                    title="Restart"
+                  >
+                    <RotateCcw size={20} />
+                  </button>
+                </div>
+
+                <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}
                 initial={{ opacity: 0, x: 20 }}
@@ -286,8 +393,10 @@ export default function App() {
                 </div>
               </motion.div>
             </AnimatePresence>
-          </div>
-        </main>
+          </>
+        )}
+      </div>
+    </main>
       </div>
 
       {/* Bottom Audio Bar */}
