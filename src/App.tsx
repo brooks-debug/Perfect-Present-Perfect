@@ -196,7 +196,7 @@ export default function App() {
           <div className="flex items-baseline gap-1.5 group">
             <span className="font-logo font-black text-red-600 uppercase tracking-tighter text-[1.15rem] leading-none translate-y-[3px]">Brooks</span>
             <span className="font-bold text-blue-600 uppercase tracking-widest text-sm underline underline-offset-[5px] decoration-2 leading-none">Language</span>
-            <span className="text-[10px] text-slate-300 font-bold ml-1">v13.0</span>
+            <span className="text-[10px] text-slate-300 font-bold ml-1">v14.0</span>
           </div>
         </div>
         <div className="flex items-center gap-3 md:gap-6">
@@ -401,12 +401,12 @@ export default function App() {
                       {currentStep.image && currentStep.image !== 'AI_AVATAR' && (
                         <img 
                           key={currentStep.id}
-                          src={`${currentStep.image}?v=13`} 
+                          src={`${currentStep.image}?v=14`} 
                           alt="Lesson visual" 
                           className={`absolute inset-0 w-full h-full object-cover z-20 ${currentStep.imageClassName || ''}`}
                           onError={(e) => {
                             console.error("Custom image failed to load:", currentStep.image);
-                            e.currentTarget.style.display = 'none';
+                            // e.currentTarget.style.display = 'none'; // Commented out to allow retry
                           }}
                         />
                       )}
