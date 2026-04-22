@@ -15,7 +15,9 @@ import {
   CheckCircle2, 
   Info,
   BookOpen,
-  GraduationCap
+  GraduationCap,
+  Menu,
+  X
 } from 'lucide-react';
 import { lessonSteps, LessonStep } from './lessonData';
 
@@ -33,6 +35,7 @@ export default function App() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [userAnswers, setUserAnswers] = useState<Record<string, { selected: string, isCorrect: boolean }>>({});
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
   const synth = window.speechSynthesis;
@@ -167,8 +170,15 @@ export default function App() {
   return (
     <div className="bg-slate-50 text-slate-900 h-screen flex flex-col font-sans border-t-4 border-blue-600 overflow-hidden shadow-2xl relative">
       {/* Header Navigation */}
-      <nav className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 flex-shrink-0">
+      <nav className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 flex-shrink-0 z-50">
         <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-2 md:hidden hover:bg-slate-50 rounded-lg text-slate-600"
+            aria-label="Toggle Menu"
+          >
+            {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
             <GraduationCap size={20} strokeWidth={2.5} />
           </div>
@@ -177,16 +187,35 @@ export default function App() {
             <span className="font-bold text-blue-600 uppercase tracking-widest text-sm underline underline-offset-[5px] decoration-2 leading-none">Language</span>
           </div>
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 md:gap-6">
+          <div className="hidden sm:block text-right">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Student Portal</span>
+          </div>
           <div className="w-10 h-10 bg-slate-200 rounded-full border-2 border-white shadow-sm overflow-hidden flex items-center justify-center text-slate-500 font-bold text-xs uppercase">
             BL
           </div>
         </div>
       </nav>
 
-      <div className="flex-grow flex overflow-hidden">
+      <div className="flex-grow flex overflow-hidden relative">
+        {/* Mobile Sidebar Overlay */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSidebarOpen(false)}
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 md:hidden mt-16"
+            />
+          )}
+        </AnimatePresence>
+
         {/* Sidebar */}
-        <aside className="w-64 bg-slate-50 border-r border-slate-200 p-6 flex flex-col gap-8 flex-shrink-0">
+        <aside className={`
+          fixed md:relative inset-y-0 left-0 w-64 bg-slate-50 border-r border-slate-200 p-6 flex flex-col gap-8 flex-shrink-0 z-40 transition-transform duration-300 md:translate-x-0 mt-16 md:mt-0
+          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}>
           <div>
             <ul className="space-y-4">
               {[
@@ -206,6 +235,7 @@ export default function App() {
                         setCurrentIndex(item.index);
                         setSelectedOption(null);
                         setShowExplanation(false);
+                        setIsSidebarOpen(false);
                       }}
                       className={`sidebar-item w-full text-left ${isActive ? 'active' : 'inactive'}`}
                     >
@@ -218,7 +248,7 @@ export default function App() {
             </ul>
           </div>
 
-          <div className="mt-auto bg-blue-50 p-4 rounded-xl border border-blue-100 min-h-[100px] flex flex-col">
+          <div className="mt-auto bg-blue-50 p-4 rounded-xl border border-blue-100 flex flex-col">
             <h4 className="text-xs font-bold text-blue-800 uppercase mb-2">Educator Note</h4>
             <p className="text-[13px] text-blue-700 leading-relaxed italic">
               "{currentStep.educatorNote || "Consistency is the key to mastering English details. Keep practicing and you will get there!"}"
@@ -227,14 +257,14 @@ export default function App() {
         </aside>
 
         {/* Content Area */}
-        <main className="flex-grow p-10 overflow-auto bg-white">
-          <div className="max-w-4xl mx-auto">
+        <main className="flex-grow p-4 md:p-10 overflow-auto bg-white">
+          <div className="max-w-4xl mx-auto py-4">
             {currentStep.id === 'results-screen' ? (
               <div className="space-y-8">
                 <div className="mb-10 flex items-center justify-between">
                   <div>
                     <span className="text-blue-600 font-bold text-xs uppercase tracking-[0.2em]">Lesson Completed</span>
-                    <h1 className="text-4xl font-bold text-slate-900 mt-1 uppercase">Quiz Results</h1>
+                    <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 mt-1 uppercase">Quiz Results</h1>
                   </div>
                   <div className="flex items-center gap-2 text-slate-400">
                     <CheckCircle2 size={18} />
@@ -248,7 +278,7 @@ export default function App() {
                   
                   return (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="bg-slate-900 p-8 rounded-3xl text-white shadow-xl flex flex-col justify-between">
+                      <div className="bg-slate-900 p-6 sm:p-10 rounded-3xl text-white shadow-xl flex flex-col justify-between">
                         <div>
                           <p className="text-blue-400 font-bold uppercase tracking-widest text-xs mb-4">Your Score</p>
                           <div className="text-7xl font-logo font-black mb-2">
@@ -306,7 +336,7 @@ export default function App() {
                 <div className="mb-10 flex items-center justify-between">
                   <div>
                     <span className="text-blue-600 font-bold text-xs uppercase tracking-[0.2em]">Lesson Focus</span>
-                    <h1 className="text-4xl font-bold text-slate-900 mt-1">Present Perfect Distinctions</h1>
+                    <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 mt-1">Present Perfect Distinctions</h1>
                   </div>
                   <button 
                     onClick={restartLesson}
@@ -326,7 +356,7 @@ export default function App() {
                 className="space-y-8"
               >
                 {/* Content Card */}
-                <div className={`${currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card p-10'}`}>
+                <div className={`${currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card p-6 sm:p-10'}`}>
                   <div className="flex items-center gap-3 mb-6">
                     <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${currentStep.type === 'quiz' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
                       {currentStep.type}
@@ -400,48 +430,48 @@ export default function App() {
       </div>
 
       {/* Bottom Audio Bar */}
-      <footer className="h-24 bg-white border-t border-slate-200 px-8 flex items-center justify-between flex-shrink-0">
-        <div className="flex items-center gap-4 w-1/3">
+      <footer className="h-24 bg-white border-t border-slate-200 px-4 md:px-8 flex items-center justify-between flex-shrink-0 gap-4">
+        <div className="flex items-center gap-4 w-1/4 md:w-1/3">
           <div className="flex flex-col">
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-1 invisible sm:visible">
               <span className={`w-2 h-2 rounded-full ${isSpeaking ? 'bg-emerald-500 shadow-sm shadow-emerald-200' : 'bg-slate-300'}`} />
-              <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold italic">Voice Monitor</span>
+              <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold italic">Voice</span>
             </div>
           </div>
         </div>
 
         {/* Transport Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
           <button 
             onClick={handlePrev}
             disabled={currentIndex === 0}
-            className="p-3 disabled:opacity-30 hover:bg-slate-50 rounded-full transition-colors text-slate-600 border border-slate-100"
+            className="p-2 md:p-3 disabled:opacity-30 hover:bg-slate-50 rounded-full transition-colors text-slate-600 border border-slate-100"
           >
             <ChevronLeft size={20} />
           </button>
           
           <button 
             onClick={togglePlay}
-            className="w-14 h-14 bg-slate-900 rounded-full text-white hover:bg-blue-600 transition-all flex items-center justify-center shadow-lg active:scale-95"
+            className="w-12 h-12 md:w-14 md:h-14 bg-slate-900 rounded-full text-white hover:bg-blue-600 transition-all flex items-center justify-center shadow-lg active:scale-95"
           >
-            {isPlaying ? <Pause fill="currentColor" size={24} /> : <Play fill="currentColor" size={24} className="ml-1" />}
+            {isPlaying ? <Pause fill="currentColor" size={20} /> : <Play fill="currentColor" size={20} className="ml-1" />}
           </button>
 
           <button 
             onClick={handleNext}
             disabled={currentIndex === lessonSteps.length - 1}
-            className="p-3 disabled:opacity-30 hover:bg-slate-50 rounded-full transition-colors text-slate-600 border border-slate-100"
+            className="p-2 md:p-3 disabled:opacity-30 hover:bg-slate-50 rounded-full transition-colors text-slate-600 border border-slate-100"
           >
             <ChevronRight size={20} />
           </button>
         </div>
 
-        <div className="w-1/3 flex justify-end items-center gap-6">
-          <div className="text-right">
-            <span className="text-[10px] font-mono text-slate-400 block uppercase tracking-widest">Progress</span>
+        <div className="w-1/4 md:w-1/3 flex justify-end items-center gap-2 md:gap-6">
+          <div className="text-right hidden sm:block">
+            <span className="text-[10px] font-mono text-slate-400 block uppercase tracking-widest">Page</span>
             <span className="text-xs font-bold text-slate-600">{currentIndex + 1} / {lessonSteps.length}</span>
           </div>
-          <div className="w-24 h-1 bg-slate-100 rounded-full overflow-hidden">
+          <div className="w-12 md:w-24 h-1 bg-slate-100 rounded-full overflow-hidden">
             <div 
               className="h-full bg-blue-600 transition-all duration-300"
               style={{ width: `${((currentIndex + 1) / lessonSteps.length) * 100}%` }}
