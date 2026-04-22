@@ -208,7 +208,7 @@ export default function App() {
           <div className="flex items-baseline gap-1.5 group">
             <span className="font-logo font-black text-red-600 uppercase tracking-tighter text-[1.15rem] leading-none translate-y-[3px]">Brooks</span>
             <span className="font-bold text-blue-600 uppercase tracking-widest text-sm underline underline-offset-[5px] decoration-2 leading-none">Language</span>
-            <span className="text-[10px] text-slate-300 font-bold ml-1">v11.0</span>
+            <span className="text-[10px] text-slate-300 font-bold ml-1">v12.0</span>
           </div>
         </div>
         <div className="flex items-center gap-3 md:gap-6">
@@ -415,10 +415,10 @@ export default function App() {
                           key={currentStep.id}
                           src={currentStepImage} 
                           alt="Lesson visual" 
-                          className={`absolute inset-0 w-full h-full object-cover z-20 transition-opacity duration-300 ${currentStep.imageClassName || ''}`}
+                          className={`absolute inset-0 w-full h-full object-cover z-20 ${currentStep.imageClassName || ''}`}
                           onError={(e) => {
                             console.error("Custom image failed to load:", currentStepImage);
-                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.style.visibility = 'hidden';
                           }}
                         />
                       )}
