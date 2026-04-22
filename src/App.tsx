@@ -403,11 +403,15 @@ export default function App() {
                           key={currentStep.id}
                           src={`${currentStep.image}?v=14`} 
                           alt="Lesson visual" 
-                          className={`absolute inset-0 w-full h-full object-cover z-20 ${currentStep.imageClassName || ''}`}
+                          className={`absolute inset-0 w-full h-full object-cover z-20 transition-opacity duration-300 ${currentStep.imageClassName || ''}`}
+                          onLoad={(e) => {
+                            e.currentTarget.style.opacity = '1';
+                          }}
                           onError={(e) => {
                             console.error("Custom image failed to load:", currentStep.image);
-                            // e.currentTarget.style.display = 'none'; // Commented out to allow retry
+                            e.currentTarget.style.display = 'none';
                           }}
+                          style={{ opacity: 0 }}
                         />
                       )}
                     </div>
