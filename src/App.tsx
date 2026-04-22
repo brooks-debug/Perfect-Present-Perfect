@@ -168,13 +168,13 @@ export default function App() {
   };
 
   return (
-    <div className="bg-slate-50 text-slate-900 h-screen flex flex-col font-sans border-t-4 border-blue-600 overflow-hidden shadow-2xl relative">
+    <div className="bg-slate-50 text-slate-900 h-[100dvh] flex flex-col font-sans border-t-4 border-blue-600 overflow-hidden shadow-2xl relative">
       {/* Header Navigation */}
       <nav className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 flex-shrink-0 z-50">
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 md:hidden hover:bg-slate-50 rounded-lg text-slate-600"
+            className="p-2 md:hidden bg-slate-50 border border-slate-200 rounded-lg text-slate-700 shadow-sm active:bg-slate-100"
             aria-label="Toggle Menu"
           >
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
@@ -430,10 +430,10 @@ export default function App() {
       </div>
 
       {/* Bottom Audio Bar */}
-      <footer className="h-24 bg-white border-t border-slate-200 px-4 md:px-8 flex items-center justify-between flex-shrink-0 gap-4">
-        <div className="flex items-center gap-4 w-1/4 md:w-1/3">
+      <footer className="h-24 bg-white border-t border-slate-200 px-4 md:px-8 flex items-center justify-between flex-shrink-0 gap-4 overflow-hidden">
+        <div className="hidden sm:flex items-center gap-4 w-1/3">
           <div className="flex flex-col">
-            <div className="flex items-center gap-2 mt-1 invisible sm:visible">
+            <div className="flex items-center gap-2 mt-1">
               <span className={`w-2 h-2 rounded-full ${isSpeaking ? 'bg-emerald-500 shadow-sm shadow-emerald-200' : 'bg-slate-300'}`} />
               <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold italic">Voice</span>
             </div>
@@ -441,37 +441,37 @@ export default function App() {
         </div>
 
         {/* Transport Controls */}
-        <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex-grow sm:flex-grow-0 flex items-center justify-center gap-4 md:gap-6">
           <button 
             onClick={handlePrev}
             disabled={currentIndex === 0}
-            className="p-2 md:p-3 disabled:opacity-30 hover:bg-slate-50 rounded-full transition-colors text-slate-600 border border-slate-100"
+            className="p-3 disabled:opacity-30 hover:bg-slate-50 rounded-full transition-colors text-slate-600 border border-slate-100"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={24} />
           </button>
           
           <button 
             onClick={togglePlay}
-            className="w-12 h-12 md:w-14 md:h-14 bg-slate-900 rounded-full text-white hover:bg-blue-600 transition-all flex items-center justify-center shadow-lg active:scale-95"
+            className="w-16 h-16 md:w-14 md:h-14 bg-slate-900 rounded-full text-white hover:bg-blue-600 transition-all flex items-center justify-center shadow-lg active:scale-95 z-10"
           >
-            {isPlaying ? <Pause fill="currentColor" size={20} /> : <Play fill="currentColor" size={20} className="ml-1" />}
+            {isPlaying ? <Pause fill="currentColor" size={24} /> : <Play fill="currentColor" size={24} className="ml-1" />}
           </button>
 
           <button 
             onClick={handleNext}
             disabled={currentIndex === lessonSteps.length - 1}
-            className="p-2 md:p-3 disabled:opacity-30 hover:bg-slate-50 rounded-full transition-colors text-slate-600 border border-slate-100"
+            className="p-3 disabled:opacity-30 hover:bg-slate-50 rounded-full transition-colors text-slate-600 border border-slate-100"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={24} />
           </button>
         </div>
 
-        <div className="w-1/4 md:w-1/3 flex justify-end items-center gap-2 md:gap-6">
-          <div className="text-right hidden sm:block">
+        <div className="hidden sm:flex w-1/3 justify-end items-center gap-6">
+          <div className="text-right">
             <span className="text-[10px] font-mono text-slate-400 block uppercase tracking-widest">Page</span>
             <span className="text-xs font-bold text-slate-600">{currentIndex + 1} / {lessonSteps.length}</span>
           </div>
-          <div className="w-12 md:w-24 h-1 bg-slate-100 rounded-full overflow-hidden">
+          <div className="w-24 h-1 bg-slate-100 rounded-full overflow-hidden">
             <div 
               className="h-full bg-blue-600 transition-all duration-300"
               style={{ width: `${((currentIndex + 1) / lessonSteps.length) * 100}%` }}
