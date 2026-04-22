@@ -56,13 +56,23 @@ export default function App() {
     
     const setVoice = () => {
       const voices = synth.getVoices();
-      const gbVoice = voices.find(v => v.lang.includes('en-GB') && v.name.toLowerCase().includes('female')) || 
-                      voices.find(v => v.lang.includes('en-GB')) ||
-                      voices.find(v => v.lang.includes('en')) ||
-                      voices[0];
+      // Prioritize distinctive high-quality British RP voices
+      const preferredVoices = [
+        'Google UK English Female',
+        'Microsoft Hazel',
+        'English (United Kingdom)',
+        'en-GB'
+      ];
       
-      if (gbVoice) {
-        utterance.voice = gbVoice;
+      let selectedVoice = null;
+      for (const name of preferredVoices) {
+        selectedVoice = voices.find(v => v.name.includes(name)) || 
+                        voices.find(v => v.lang.includes(name));
+        if (selectedVoice) break;
+      }
+
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
       }
     };
 
@@ -183,9 +193,10 @@ export default function App() {
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
             <GraduationCap size={20} strokeWidth={2.5} />
           </div>
-          <div className="flex items-baseline gap-1.5">
+          <div className="flex items-baseline gap-1.5 group">
             <span className="font-logo font-black text-red-600 uppercase tracking-tighter text-[1.15rem] leading-none translate-y-[3px]">Brooks</span>
             <span className="font-bold text-blue-600 uppercase tracking-widest text-sm underline underline-offset-[5px] decoration-2 leading-none">Language</span>
+            <span className="text-[10px] text-slate-300 font-bold ml-1">v8.2</span>
           </div>
         </div>
         <div className="flex items-center gap-3 md:gap-6">
@@ -337,8 +348,8 @@ export default function App() {
               <>
                 <div className="mb-10 flex items-center justify-between">
                   <div>
-                    <span className="text-blue-600 font-bold text-xs uppercase tracking-[0.2em]">Lesson Focus</span>
-                    <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 mt-1">Present Perfect Distinctions</h1>
+                    <span className="text-blue-600 font-bold text-xs uppercase tracking-[0.2em]">LESSON FOCUS</span>
+                    <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 mt-1">{currentStep.section}</h1>
                   </div>
                   <button 
                     onClick={restartLesson}
@@ -360,18 +371,48 @@ export default function App() {
                 {/* Content Card */}
                 <div className={`${currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card overflow-hidden'}`}>
                   {currentStep.image && (
-                    <div className="w-full h-48 sm:h-72 overflow-hidden bg-slate-100 flex items-center justify-center relative">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                      <img 
-                        src={currentStep.image} 
-                        alt="Language Learning Students" 
-                        className="w-full h-full object-cover relative z-10"
-                        referrerPolicy="no-referrer"
-                        onError={(e) => {
-                          console.error("Image failed to load:", currentStep.image);
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
+                    <div className="w-full h-48 sm:h-72 overflow-hidden bg-slate-100 flex items-center justify-center relative group">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-20 pointer-events-none" />
+                      
+                      {/* Fallback Icon / AI Avatar (Always works) */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800">
+                        <div className="relative">
+                          <motion.div 
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border-4 border-white/30"
+                          >
+                            <GraduationCap size={64} className="text-white drop-shadow-lg" strokeWidth={1.5} />
+                          </motion.div>
+                          <motion.div 
+                            animate={{ y: [0, -5, 0] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute -top-2 -right-2 w-8 h-8 bg-emerald-400 rounded-full border-4 border-white flex items-center justify-center"
+                          >
+                            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                          </motion.div>
+                        </div>
+                        <div className="absolute bottom-6 left-0 right-0 text-center">
+                          <span className="text-white/60 text-[10px] uppercase tracking-[0.3em] font-black">AI Educator</span>
+                        </div>
+                      </div>
+
+                      {currentStep.image !== 'AI_AVATAR' && (
+                        <img 
+                          key={currentStep.id}
+                          src={currentStep.image} 
+                          alt="Teacher" 
+                          className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 ${currentStep.imageClassName || ''}`}
+                          onLoad={(e) => {
+                            const img = e.currentTarget;
+                            img.style.opacity = '1';
+                          }}
+                          onError={(e) => {
+                            console.error("Teacher image failed to load:", currentStep.image);
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      )}
                     </div>
                   )}
                   
