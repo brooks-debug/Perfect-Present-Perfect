@@ -5,8 +5,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import teacherImage from './assets/teacher_perfect.png';
-import successImage from './assets/success_chat.png';
 import { 
   Play, 
   Pause, 
@@ -44,16 +42,6 @@ export default function App() {
   const synth = window.speechSynthesis;
 
   const currentStep = lessonSteps[currentIndex];
-
-  // Map the static image paths to the imported assets
-  const getImageUrl = (path?: string) => {
-    if (!path) return null;
-    if (path.includes('teacher_perfect')) return teacherImage;
-    if (path.includes('success_chat')) return successImage;
-    return path;
-  };
-
-  const currentStepImage = getImageUrl(currentStep.image);
 
   // --- Voice Setup ---
   const stopSpeech = useCallback(() => {
@@ -208,7 +196,7 @@ export default function App() {
           <div className="flex items-baseline gap-1.5 group">
             <span className="font-logo font-black text-red-600 uppercase tracking-tighter text-[1.15rem] leading-none translate-y-[3px]">Brooks</span>
             <span className="font-bold text-blue-600 uppercase tracking-widest text-sm underline underline-offset-[5px] decoration-2 leading-none">Language</span>
-            <span className="text-[10px] text-slate-300 font-bold ml-1">v12.0</span>
+            <span className="text-[10px] text-slate-300 font-bold ml-1">v13.0</span>
           </div>
         </div>
         <div className="flex items-center gap-3 md:gap-6">
@@ -410,15 +398,15 @@ export default function App() {
                       </div>
 
                       {/* Foreground Custom Image (Sits on top of avatar) */}
-                      {currentStepImage && currentStep.image !== 'AI_AVATAR' && (
+                      {currentStep.image && currentStep.image !== 'AI_AVATAR' && (
                         <img 
                           key={currentStep.id}
-                          src={currentStepImage} 
+                          src={`${currentStep.image}?v=13`} 
                           alt="Lesson visual" 
                           className={`absolute inset-0 w-full h-full object-cover z-20 ${currentStep.imageClassName || ''}`}
                           onError={(e) => {
-                            console.error("Custom image failed to load:", currentStepImage);
-                            e.currentTarget.style.visibility = 'hidden';
+                            console.error("Custom image failed to load:", currentStep.image);
+                            e.currentTarget.style.display = 'none';
                           }}
                         />
                       )}
