@@ -8,12 +8,17 @@ export interface LessonStep {
   type: 'narrative' | 'info' | 'example' | 'quiz' | 'pause';
   text: string;
   secondaryText?: string; // e.g. structural formulas
+  image?: string; // Hero image URL
   highlight?: string;
   options?: string[];
   correctAnswer?: string;
   explanation?: string;
   autoPlayNext?: boolean;
   educatorNote?: string;
+  cta?: {
+    text: string;
+    url: string;
+  };
 }
 
 export const lessonSteps: LessonStep[] = [
@@ -21,6 +26,7 @@ export const lessonSteps: LessonStep[] = [
     id: 'intro',
     type: 'narrative',
     text: "Hello, I am your AI teacher, programmed to help you with your homework. Today I want to help you feel more confident with a very common question in English: when do we use the present perfect simple, and when do we use the present perfect continuous?",
+    image: "https://images.unsplash.com/photo-1543269664-76bc3997d9ea?q=80&w=2070&auto=format&fit=crop",
     autoPlayNext: true,
     educatorNote: "Present perfect simple and continuous is Upper-intermediate grammar point. Mastering this grammar will take you towards Advanced level."
   },
@@ -292,14 +298,20 @@ export const lessonSteps: LessonStep[] = [
   {
     id: 'final-thought',
     type: 'narrative',
-    text: "One final thought. When choosing the present perfect simple or continuous, ask: Am I showing the result, or the activity? Finished, or happening? Factual, or process/effort?",
+    text: "Something to keep in mind: when choosing the present perfect simple or continuous, ask: Am I showing the result, or the activity? Finished, or happening? Factual, or process/effort?",
+    image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop",
     autoPlayNext: true
   },
   {
     id: 'outro',
     type: 'narrative',
     text: "Keep practicing, and remember that these choices help you express who you are and how you see the world. Well done!",
+    image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop",
     autoPlayNext: false,
-    educatorNote: "Language learning is a journey of constant improvement. Well done on completing today's focus!"
+    educatorNote: "Mastering a language is a journey of constant improvement. Well done on completing today's focus!",
+    cta: {
+      text: "Visit our website to read and practice more",
+      url: "https://www.brookslanguage.com/2014/09/present-perfect-simple-or-continuous.html"
+    }
   }
 ];

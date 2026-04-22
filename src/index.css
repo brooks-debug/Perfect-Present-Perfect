@@ -22,7 +22,7 @@ body {
 }
 
 .interactive-card {
-  @apply bg-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl;
+  @apply bg-slate-900 rounded-3xl text-white shadow-xl;
 }
 
 .sidebar-item {

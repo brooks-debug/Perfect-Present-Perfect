@@ -17,7 +17,8 @@ import {
   BookOpen,
   GraduationCap,
   Menu,
-  X
+  X,
+  ExternalLink
 } from 'lucide-react';
 import { lessonSteps, LessonStep } from './lessonData';
 
@@ -320,6 +321,7 @@ export default function App() {
                             Completing this lesson moves you closer to Advanced level. Take your time to review any tricky questions.
                           </p>
                         </div>
+                        
                         <button 
                           onClick={restartQuiz}
                           className="w-full bg-white border border-slate-200 p-4 rounded-xl font-bold text-slate-700 flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors"
@@ -356,8 +358,25 @@ export default function App() {
                 className="space-y-8"
               >
                 {/* Content Card */}
-                <div className={`${currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card p-6 sm:p-10'}`}>
-                  <div className="flex items-center gap-3 mb-6">
+                <div className={`${currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card overflow-hidden'}`}>
+                  {currentStep.image && (
+                    <div className="w-full h-48 sm:h-72 overflow-hidden bg-slate-100 flex items-center justify-center relative">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                      <img 
+                        src={currentStep.image} 
+                        alt="Language Learning Students" 
+                        className="w-full h-full object-cover relative z-10"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          console.error("Image failed to load:", currentStep.image);
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
+                  
+                  <div className={currentStep.type === 'quiz' ? 'p-6 sm:p-10' : 'p-6 sm:p-10'}>
+                    <div className="flex items-center gap-3 mb-6">
                     <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${currentStep.type === 'quiz' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
                       {currentStep.type}
                     </span>
@@ -420,8 +439,27 @@ export default function App() {
                       {currentStep.explanation}
                     </motion.div>
                   )}
+
+                  {currentStep.cta && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="mt-12 flex justify-center"
+                    >
+                      <a 
+                        href={currentStep.cta.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-3 px-10 py-4 bg-slate-100 text-slate-900 rounded-xl font-bold hover:bg-slate-200 transition-all group active:scale-95 shadow-sm border border-slate-200"
+                      >
+                        {currentStep.cta.text}
+                        <ExternalLink size={18} className="text-blue-600 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      </a>
+                    </motion.div>
+                  )}
                 </div>
-              </motion.div>
+              </div>
+            </motion.div>
             </AnimatePresence>
           </>
         )}
