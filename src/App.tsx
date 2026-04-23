@@ -371,7 +371,7 @@ export default function App() {
                 {/* Content Card */}
                 <div className={`${currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card overflow-hidden'}`}>
                   {currentStep.image && (
-                    <div className="w-full h-32 sm:h-48 overflow-hidden bg-slate-100 flex items-center justify-center relative group">
+                    <div className="w-full aspect-video overflow-hidden bg-slate-100 flex items-center justify-center relative group">
                       <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent z-20 pointer-events-none" />
                       
                       {/* Background Fallback (Avatar) - Always visible as the base layer */}
