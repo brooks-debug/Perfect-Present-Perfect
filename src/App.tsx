@@ -401,7 +401,7 @@ export default function App() {
                       {currentStep.image && currentStep.image !== 'AI_AVATAR' && (
                         <img 
                           key={currentStep.id}
-                          src={`${currentStep.image}?v=14`} 
+                          src={currentStep.image} 
                           alt="Lesson visual" 
                           className={`absolute inset-0 w-full h-full object-cover z-20 transition-opacity duration-300 ${currentStep.imageClassName || ''}`}
                           onLoad={(e) => {

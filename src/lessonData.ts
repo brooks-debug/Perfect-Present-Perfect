@@ -3,6 +3,9 @@
  * Based on the specialized en-GB-Studio-C voice profile.
  */
 
+import teacherImage from './assets/teacher.jpg';
+import successImage from './assets/success.jpg';
+
 export interface LessonStep {
   id: string;
   type: 'narrative' | 'info' | 'example' | 'quiz' | 'pause';
@@ -29,7 +32,7 @@ export const lessonSteps: LessonStep[] = [
     type: 'narrative',
     section: 'Introduction',
     text: "Hello, I am your AI teacher, programmed to help you with your homework. Today I want to help you feel more confident with a very common question in English: when do we use the present perfect simple, and when do we use the present perfect continuous?",
-    image: "/teacher.jpg",
+    image: teacherImage,
     imageClassName: "object-cover", 
     autoPlayNext: true,
     educatorNote: "Present perfect simple and continuous is Upper-intermediate grammar point. Mastering this grammar will take you towards Advanced level."
@@ -334,7 +337,7 @@ export const lessonSteps: LessonStep[] = [
     type: 'narrative',
     section: 'Summary Review',
     text: "Keep practicing and remember, when choosing between simple and continuous, ask: Result or Activity? Finished or Happening? Fact or Process? These choices help you express who you are and how you see the world. Well done!",
-    image: "/success.jpg",
+    image: successImage,
     autoPlayNext: false,
     educatorNote: "Language is about expressing your perspective. Great job today!",
     cta: {
