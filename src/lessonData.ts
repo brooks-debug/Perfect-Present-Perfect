@@ -341,5 +341,15 @@ export const lessonSteps: LessonStep[] = [
       text: "Visit our website for more resources",
       url: "https://www.brookslanguage.com/2014/09/present-perfect-simple-or-continuous.html"
     }
+  },
+  {
+    id: 'goodbye',
+    type: 'narrative',
+    section: 'Goodbye',
+    text: "Thanks for joining our lesson today! Keep practicing those tenses. Goodbye!",
+    image: "https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&q=80&w=1200",
+    imageClassName: "object-contain",
+    autoPlayNext: false,
+    educatorNote: "See you in the next lesson!"
   }
 ];
