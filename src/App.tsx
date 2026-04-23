@@ -380,7 +380,7 @@ export default function App() {
                           src={currentStep.image} 
                           alt="Teacher" 
                           referrerPolicy="no-referrer"
-                          className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 ${currentStep.imageClassName || ''}`}
+                          className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 opacity-0 ${currentStep.imageClassName || ''}`}
                           onLoad={(e) => {
                             e.currentTarget.classList.remove('opacity-0');
                           }}
