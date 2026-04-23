@@ -371,18 +371,18 @@ export default function App() {
                 {/* Content Card */}
                 <div className={`${currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card overflow-hidden'}`}>
                   {currentStep.image && (
-                    <div className="w-full h-48 sm:h-72 overflow-hidden bg-slate-100 flex items-center justify-center relative group">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-20 pointer-events-none" />
+                    <div className="w-full h-32 sm:h-48 overflow-hidden bg-slate-100 flex items-center justify-center relative group">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent z-20 pointer-events-none" />
                       
                       {/* Background Fallback (Avatar) - Always visible as the base layer */}
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 z-10">
+                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 z-10">
                         <div className="relative">
                           <motion.div 
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border-4 border-white/30"
+                            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border-2 border-white/30"
                           >
-                            <GraduationCap size={64} className="text-white drop-shadow-lg" strokeWidth={1.5} />
+                            <GraduationCap size={40} className="text-white drop-shadow-lg" strokeWidth={1.5} />
                           </motion.div>
                           <motion.div 
                             animate={{ y: [0, -5, 0] }}
@@ -401,14 +401,9 @@ export default function App() {
                       {currentStep.image && currentStep.image !== 'AI_AVATAR' && (
                         <img
                           key={currentStep.id}
-                          src={typeof currentStep.image === 'string' ? currentStep.image : (currentStep.image as any)?.default}
+                          src={currentStep.image}
                           alt="Lesson visual"
                           className={`absolute inset-0 w-full h-full object-cover z-30 ${currentStep.imageClassName || ''}`}
-                          onLoad={() => console.log('IMAGE LOADED', currentStep.id, currentStep.image)}
-                          onError={(e) => {
-                            console.error('IMAGE FAILED', currentStep.id, currentStep.image);
-                            e.currentTarget.style.display = 'none';
-                          }}
                         />
                       )}
                     </div>
