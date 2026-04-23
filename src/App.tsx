@@ -372,7 +372,7 @@ export default function App() {
                 <div className={`${currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card overflow-hidden'}`}>
                   {currentStep.image && (
                     <div className="w-full h-48 sm:h-72 overflow-hidden bg-slate-100 flex items-center justify-center relative group">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-30 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-20 pointer-events-none" />
                       
                       {/* Background Fallback (Avatar) - Always visible as the base layer */}
                       <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 z-10">
@@ -399,11 +399,16 @@ export default function App() {
 
                       {/* Foreground Custom Image (Sits on top of avatar) */}
                       {currentStep.image && currentStep.image !== 'AI_AVATAR' && (
-                        <img 
+                        <img
                           key={currentStep.id}
                           src={typeof currentStep.image === 'string' ? currentStep.image : (currentStep.image as any)?.default}
                           alt="Lesson visual"
-                          className={`absolute inset-0 w-full h-full object-cover z-20 ${currentStep.imageClassName || ''}`}
+                          className={`absolute inset-0 w-full h-full object-cover z-30 ${currentStep.imageClassName || ''}`}
+                          onLoad={() => console.log('IMAGE LOADED', currentStep.id, currentStep.image)}
+                          onError={(e) => {
+                            console.error('IMAGE FAILED', currentStep.id, currentStep.image);
+                            e.currentTarget.style.display = 'none';
+                          }}
                         />
                       )}
                     </div>
