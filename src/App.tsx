@@ -379,10 +379,10 @@ export default function App() {
                           key={currentStep.id}
                           src={currentStep.image} 
                           alt="Teacher" 
-                          className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 opacity-0 ${currentStep.imageClassName || ''}`}
+                          referrerPolicy="no-referrer"
+                          className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 ${currentStep.imageClassName || ''}`}
                           onLoad={(e) => {
-                            const img = e.currentTarget;
-                            img.style.opacity = '1';
+                            e.currentTarget.classList.remove('opacity-0');
                           }}
                           onError={(e) => {
                             console.error("Teacher image failed to load:", currentStep.image);
