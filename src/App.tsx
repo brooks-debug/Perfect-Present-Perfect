@@ -196,7 +196,7 @@ export default function App() {
           <div className="flex items-baseline gap-1.5 group">
             <span className="font-logo font-black text-red-600 uppercase tracking-tighter text-[1.15rem] leading-none translate-y-[3px]">Brooks</span>
             <span className="font-bold text-blue-600 uppercase tracking-widest text-sm underline underline-offset-[5px] decoration-2 leading-none">Language</span>
-            <span className="text-[10px] text-slate-300 font-bold ml-1">v14.0</span>
+            <span className="text-[10px] text-slate-300 font-bold ml-1">v9.0</span>
           </div>
         </div>
         <div className="flex items-center gap-3 md:gap-6">
@@ -371,40 +371,47 @@ export default function App() {
                 {/* Content Card */}
                 <div className={`${currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card overflow-hidden'}`}>
                   {currentStep.image && (
-                    <div className="w-full aspect-video overflow-hidden bg-slate-100 flex items-center justify-center relative group">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent z-20 pointer-events-none" />
+                    <div className="w-full h-48 sm:h-72 overflow-hidden bg-slate-100 flex items-center justify-center relative group">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-20 pointer-events-none" />
                       
-                      {/* Background Fallback (Avatar) - Always visible as the base layer */}
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 z-10">
-                        <div className="relative">
-                          <motion.div 
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border-2 border-white/30"
-                          >
-                            <GraduationCap size={40} className="text-white drop-shadow-lg" strokeWidth={1.5} />
-                          </motion.div>
-                          <motion.div 
-                            animate={{ y: [0, -5, 0] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute -top-2 -right-2 w-8 h-8 bg-emerald-400 rounded-full border-4 border-white flex items-center justify-center"
-                          >
-                            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                          </motion.div>
-                        </div>
-                        <div className="absolute bottom-6 left-0 right-0 text-center">
-                          <span className="text-white/60 text-[10px] uppercase tracking-[0.3em] font-black">AI Educator</span>
-                        </div>
-                      </div>
-
-                      {/* Foreground Custom Image (Sits on top of avatar) */}
-                      {currentStep.image && currentStep.image !== 'AI_AVATAR' && (
-                        <img
+                      {currentStep.image !== 'AI_AVATAR' ? (
+                        <img 
                           key={currentStep.id}
-                          src={currentStep.image}
-                          alt="Lesson visual"
-                          className={`absolute inset-0 w-full h-full object-cover z-30 ${currentStep.imageClassName || ''}`}
+                          src={currentStep.image} 
+                          alt="Teacher" 
+                          className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 opacity-0 ${currentStep.imageClassName || ''}`}
+                          onLoad={(e) => {
+                            const img = e.currentTarget;
+                            img.style.opacity = '1';
+                          }}
+                          onError={(e) => {
+                            console.error("Teacher image failed to load:", currentStep.image);
+                            e.currentTarget.style.display = 'none';
+                          }}
                         />
+                      ) : (
+                        /* AI Avatar - Only shown if specifically requested */
+                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 z-20">
+                          <div className="relative">
+                            <motion.div 
+                              initial={{ scale: 0.8, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border-4 border-white/30"
+                            >
+                              <GraduationCap size={64} className="text-white drop-shadow-lg" strokeWidth={1.5} />
+                            </motion.div>
+                            <motion.div 
+                              animate={{ y: [0, -5, 0] }}
+                              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                              className="absolute -top-2 -right-2 w-8 h-8 bg-emerald-400 rounded-full border-4 border-white flex items-center justify-center"
+                            >
+                              <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                            </motion.div>
+                          </div>
+                          <div className="absolute bottom-6 left-0 right-0 text-center">
+                            <span className="text-white/60 text-[10px] uppercase tracking-[0.3em] font-black">AI Educator</span>
+                          </div>
+                        </div>
                       )}
                     </div>
                   )}
