@@ -401,17 +401,13 @@ export default function App() {
                       {currentStep.image && currentStep.image !== 'AI_AVATAR' && (
                         <img 
                           key={currentStep.id}
-                          src={currentStep.image} 
-                          alt="Lesson visual" 
-                          className={`absolute inset-0 w-full h-full object-cover z-20 transition-opacity duration-300 ${currentStep.imageClassName || ''}`}
-                          onLoad={(e) => {
-                            e.currentTarget.style.opacity = '1';
-                          }}
+                          src={currentStep.image}
+                          alt="Lesson visual"
+                          className={`absolute inset-0 w-full h-full object-cover z-20 ${currentStep.imageClassName || ''}`}
                           onError={(e) => {
                             console.error("Custom image failed to load:", currentStep.image);
                             e.currentTarget.style.display = 'none';
                           }}
-                          style={{ opacity: 0 }}
                         />
                       )}
                     </div>
