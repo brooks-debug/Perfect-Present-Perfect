@@ -43,6 +43,16 @@ export default function App() {
 
   const currentStep = lessonSteps[currentIndex];
 
+  // --- Image Preloading ---
+  useEffect(() => {
+    lessonSteps.forEach(step => {
+      if (step.image && step.image !== 'AI_AVATAR') {
+        const img = new Image();
+        img.src = step.image;
+      }
+    });
+  }, []);
+
   // --- Voice Setup ---
   const stopSpeech = useCallback(() => {
     synth.cancel();
@@ -371,15 +381,15 @@ export default function App() {
                 {/* Content Card */}
                 <div className={currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card overflow-hidden'}>
                   {currentStep.image && (
-                    <div className="w-full overflow-hidden flex items-center justify-center relative group bg-slate-50">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-20 pointer-events-none" />
+                    <div className="w-full overflow-hidden flex items-center justify-center relative group">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent z-20 pointer-events-none" />
                       
                       {currentStep.image !== 'AI_AVATAR' ? (
                         <img 
                           key={currentStep.id}
                           src={currentStep.image} 
                           alt="Teacher" 
-                          className={`w-full h-auto relative z-10 transition-opacity duration-500 opacity-0 ${currentStep.imageClassName || 'object-cover'}`}
+                          className={`w-full h-auto relative z-10 transition-opacity duration-700 opacity-0 ${currentStep.imageClassName || 'object-cover'}`}
                           onLoad={(e) => {
                             e.currentTarget.classList.remove('opacity-0');
                           }}
