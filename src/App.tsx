@@ -347,21 +347,17 @@ export default function App() {
             ) : (
               <>
                 <div className="mb-10 flex items-center justify-between">
-                  <div className={currentStep.id === 'goodbye' ? 'text-center w-full' : ''}>
-                    {currentStep.id !== 'goodbye' && (
-                      <span className="text-blue-600 font-bold text-xs uppercase tracking-[0.2em]">LESSON FOCUS</span>
-                    )}
-                    <h1 className={`text-2xl sm:text-4xl font-bold text-slate-900 mt-1 ${currentStep.id === 'goodbye' ? 'uppercase tracking-tighter' : ''}`}>{currentStep.section}</h1>
+                  <div>
+                    <span className="text-blue-600 font-bold text-xs uppercase tracking-[0.2em]">LESSON FOCUS</span>
+                    <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 mt-1">{currentStep.section}</h1>
                   </div>
-                  {currentStep.id !== 'goodbye' && (
-                    <button 
-                      onClick={restartLesson}
-                      className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400"
-                      title="Restart"
-                    >
-                      <RotateCcw size={20} />
-                    </button>
-                  )}
+                  <button 
+                    onClick={restartLesson}
+                    className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400"
+                    title="Restart"
+                  >
+                    <RotateCcw size={20} />
+                  </button>
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -373,24 +369,22 @@ export default function App() {
                 className="space-y-8"
               >
                 {/* Content Card */}
-                <div className={`${currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card overflow-hidden'} ${currentStep.id === 'goodbye' ? 'flex flex-col items-center justify-center min-h-[400px]' : ''}`}>
+                <div className={currentStep.type === 'quiz' ? 'interactive-card' : 'lesson-card overflow-hidden'}>
                   {currentStep.image && (
-                    <div className={`${currentStep.id === 'goodbye' ? 'w-full h-64 sm:h-96' : 'w-full h-48 sm:h-72'} overflow-hidden bg-slate-100 flex items-center justify-center relative group`}>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-20 pointer-events-none" />
+                    <div className="w-full overflow-hidden flex items-center justify-center relative group bg-slate-50">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-20 pointer-events-none" />
                       
                       {currentStep.image !== 'AI_AVATAR' ? (
                         <img 
                           key={currentStep.id}
                           src={currentStep.image} 
                           alt="Teacher" 
-                          referrerPolicy="no-referrer"
-                          className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 opacity-0 ${currentStep.imageClassName || ''}`}
+                          className={`w-full h-auto relative z-10 transition-opacity duration-500 opacity-0 ${currentStep.imageClassName || 'object-cover'}`}
                           onLoad={(e) => {
                             e.currentTarget.classList.remove('opacity-0');
                           }}
                           onError={(e) => {
                             console.error("Teacher image failed to load:", currentStep.image);
-                            e.currentTarget.style.display = 'none';
                           }}
                         />
                       ) : (
@@ -420,8 +414,8 @@ export default function App() {
                     </div>
                   )}
                   
-                  <div className={`${currentStep.type === 'quiz' ? 'p-6 sm:p-10' : 'p-6 sm:p-10'} ${currentStep.id === 'goodbye' ? 'text-center' : ''}`}>
-                    <div className={`flex items-center gap-3 mb-6 ${currentStep.id === 'goodbye' ? 'justify-center' : ''}`}>
+                  <div className="p-6 sm:p-10">
+                    <div className="flex items-center gap-3 mb-6">
                     <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${currentStep.type === 'quiz' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
                       {currentStep.type}
                     </span>

@@ -29,8 +29,8 @@ export const lessonSteps: LessonStep[] = [
     type: 'narrative',
     section: 'Introduction',
     text: "Hello, I am your AI teacher, programmed to help you with your homework. Today I want to help you feel more confident with a very common question in English: when do we use the present perfect simple, and when do we use the present perfect continuous?",
-    image: "AI_AVATAR",
-    imageClassName: "object-cover", 
+    image: "https://drive.google.com/thumbnail?id=1VjxJNoYZLL_9JnqX6_V8TG1w_K2CaHQ_&sz=w1200",
+    imageClassName: "w-full", 
     autoPlayNext: true,
     educatorNote: "Present perfect simple and continuous is Upper-intermediate grammar point. Mastering this grammar will take you towards Advanced level."
   },
@@ -334,22 +334,13 @@ export const lessonSteps: LessonStep[] = [
     type: 'narrative',
     section: 'Summary Review',
     text: "Keep practicing and remember, when choosing between simple and continuous, ask: Result or Activity? Finished or Happening? Fact or Process? These choices help you express who you are and how you see the world. Well done!",
-    image: "AI_AVATAR",
+    image: "https://drive.google.com/thumbnail?id=1LNAZ6Ks8Bje3OT2KsmHbpBipD99x0wjq&sz=w1200",
+    imageClassName: "w-full",
     autoPlayNext: false,
     educatorNote: "Language is about expressing your perspective. Great job today!",
     cta: {
       text: "Visit our website for more resources",
       url: "https://www.brookslanguage.com/2014/09/present-perfect-simple-or-continuous.html"
     }
-  },
-  {
-    id: 'goodbye',
-    type: 'narrative',
-    section: 'Goodbye',
-    text: "Thanks for joining our lesson today! Keep practicing those tenses. Goodbye!",
-    image: "https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&q=80&w=1200",
-    imageClassName: "object-contain",
-    autoPlayNext: false,
-    educatorNote: "See you in the next lesson!"
   }
 ];
